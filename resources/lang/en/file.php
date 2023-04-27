@@ -305,6 +305,8 @@ return [
 	'Product Invoice Details' => 'Product Invoice Details',
 	'Purchase Status' => 'Purchase Status',
 	'Add Gift Card' => 'Add Gift Card',
+	'Add Load Card' => 'Add Load Card',
+	'Update Load Card' => 'Update Load Card',
 	'Card No' => 'Card No',
 	'Reference No' => 'Reference No',
 	'Add Coupon' => 'Add Coupon',

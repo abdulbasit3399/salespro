@@ -319,8 +319,11 @@ Route::group(['middleware' => ['common', 'auth', 'active']], function() {
 	Route::resource('expenses', 'ExpenseController');
 
 	Route::get('gift_cards/gencode', 'GiftCardController@generateCode');
+	Route::get('load_cards/gencode', 'LoadCardController@generateCode');
 	Route::post('gift_cards/recharge/{id}', 'GiftCardController@recharge')->name('gift_cards.recharge');
+	Route::post('load_cards/recharge/{id}', 'LoadCardController@recharge')->name('load_cards.recharge');
 	Route::post('gift_cards/deletebyselection', 'GiftCardController@deleteBySelection');
+	Route::post('load_cards/deletebyselection', 'LoadCardController@deleteBySelection');
 	Route::resource('gift_cards', 'GiftCardController');
 	Route::resource('load_cards', 'LoadCardController');
 
