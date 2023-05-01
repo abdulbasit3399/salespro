@@ -22,8 +22,10 @@ use App\Payment;
 use App\Account;
 use App\Coupon;
 use App\GiftCard;
+use App\LoadCard;
 use App\PaymentWithCheque;
 use App\PaymentWithGiftCard;
+use App\PaymentWithLoadCard;
 use App\PaymentWithCreditCard;
 use App\PaymentWithPaypal;
 use App\User;
@@ -687,6 +689,10 @@ class SaleController extends Controller
                     $paying_method = 'Points';
                     $lims_payment_data->used_points = $data['used_points'];
                 }
+                elseif($data['paid_by_id'] == 8) {
+                    $paying_method = 'Load Card';
+                    $lims_payment_data->used_points = $data['used_points'];
+                }
 
                 if($cash_register_data)
                     $lims_payment_data->cash_register_id = $cash_register_data->id;
@@ -745,6 +751,12 @@ class SaleController extends Controller
                     $lims_gift_card_data->expense += $data['paid_amount'];
                     $lims_gift_card_data->save();
                     PaymentWithGiftCard::create($data);
+                }
+                elseif ($paying_method == 'Load Card') {
+                    $lims_gift_card_data = LoadCard::find($data['load_card_id']);
+                    $lims_gift_card_data->expense += $data['paid_amount'];
+                    $lims_gift_card_data->save();
+                    PaymentWithLoadCard::create($data);
                 }
                 elseif ($paying_method == 'Cheque') {
                     PaymentWithCheque::create($data);
@@ -1518,7 +1530,11 @@ class SaleController extends Controller
         $gift_card = GiftCard::where("is_active", true)->whereDate('expired_date', '>=', date("Y-m-d"))->get(['id', 'card_no', 'amount', 'expense']);
         return json_encode($gift_card);
     }
-
+    public function getLoadCard()
+    {
+        $load_card = LoadCard::where("is_active", true)->whereDate('expired_date', '>=', date("Y-m-d"))->get(['id', 'card_no', 'amount', 'expense']);
+        return json_encode($load_card);
+    }
     public function productSaleData($id)
     {
         $lims_product_sale_data = Product_Sale::where('sale_id', $id)->get();

@@ -146,6 +146,7 @@ Route::group(['middleware' => ['common', 'auth', 'active']], function() {
 	Route::get('sales/getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
 	Route::get('sales/getfeatured', 'SaleController@getFeatured');
 	Route::get('sales/get_gift_card', 'SaleController@getGiftCard');
+	Route::get('sales/get_load_card', 'SaleController@getLoadCard');
 	Route::get('sales/paypalSuccess', 'SaleController@paypalSuccess');
 	Route::get('sales/paypalPaymentSuccess/{id}', 'SaleController@paypalPaymentSuccess');
 	Route::get('sales/gen_invoice/{id}', 'SaleController@genInvoice')->name('sale.invoice');

@@ -152,12 +152,44 @@ class LoadCardController extends Controller
     }
     public function deleteBySelection(Request $request)
     {
-        $gift_card_id = $request['gift_cardIdArray'];
+        $gift_card_id = $request['load_cardIdArray'];
         foreach ($gift_card_id as $id) {
             $lims_gift_card_data = LoadCard::find($id);
             $lims_gift_card_data->is_active = false;
             $lims_gift_card_data->save();
         }
         return 'Load Card deleted successfully!';
+    }
+
+    public function recharge(Request $request, $id)
+    {
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+        $lims_gift_card_data = LoadCard::find($data['load_card_id']);
+        if($lims_gift_card_data->customer_id)
+            $lims_customer_data = Customer::find($lims_gift_card_data->customer_id);
+        else
+            $lims_customer_data = User::find($lims_gift_card_data->user_id);
+        
+        $lims_gift_card_data->amount += $data['amount'];
+        $lims_gift_card_data->save();
+        LoadCardRecharge::create($data);
+        $message = 'LoadCard recharged successfully';
+        if($lims_customer_data->email){
+            $data['email'] = $lims_customer_data->email;
+            $data['name'] = $lims_customer_data->name;
+            $data['card_no'] = $lims_gift_card_data->card_no;
+            $data['balance'] = $lims_gift_card_data->amount - $lims_gift_card_data->expense;
+            try{
+                Mail::send( 'mail.gift_card_recharge', $data, function( $message ) use ($data)
+                {
+                    $message->to( $data['email'] )->subject( 'LoadCard Recharge Info' );
+                });
+            }
+            catch(\Exception $e){
+                $message = 'LoadCard recharged successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
+            }  
+        }
+        return redirect('load_cards')->with('message', $message);
     }
 }

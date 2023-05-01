@@ -522,7 +522,7 @@
                                 type:'POST',
                                 url:'load_cards/deletebyselection',
                                 data:{
-                                    gift_cardIdArray: load_card_id
+                                    load_cardIdArray: load_card_id
                                 },
                                 success:function(data){
                                     alert(data);

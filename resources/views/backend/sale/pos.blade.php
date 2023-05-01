@@ -365,6 +365,11 @@
                             <button style="background-color: #5f27cd" type="button" class="btn btn-sm btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="fa fa-credit-card-alt"></i> {{trans('file.Gift Card')}}</button>
                         </div>
                         @endif
+                        @if(in_array("load_card",$options))
+                        <div class="column-5">
+                            <button style="background-color: #269153 !important" type="button" class="btn btn-sm btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="load-card-btn"><i class="fa fa-credit-card-alt"></i> {{trans('file.Load Card')}}</button>
+                        </div>
+                        @endif
                         @if(in_array("deposit",$options))
                         <div class="column-5">
                             <button style="background-color: #b33771" type="button" class="btn btn-sm btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> {{trans('file.Deposit')}}</button>
@@ -418,6 +423,9 @@
                                                 @if(in_array("gift_card",$options))
                                                 <option value="2">Gift Card</option>
                                                 @endif
+                                                @if(in_array("load_card",$options))
+                                                <option value="8">Load Card</option>
+                                                @endif
                                                 @if(in_array("card",$options))
                                                 <option value="3">Credit Card</option>
                                                 @endif
@@ -444,6 +452,11 @@
                                             <label> {{trans('file.Gift Card')}} *</label>
                                             <input type="hidden" name="gift_card_id">
                                             <select id="gift_card_id_select" name="gift_card_id_select" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card..."></select>
+                                        </div>
+                                        <div class="form-group col-md-12 load-card">
+                                            <label> {{trans('file.Load Card')}} *</label>
+                                            <input type="hidden" name="load_card_id">
+                                            <select id="load_card_id_select" name="load_card_id_select" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Load Card..."></select>
                                         </div>
                                         <div class="form-group col-md-12 cheque">
                                             <label>{{trans('file.Cheque Number')}} *</label>
@@ -1079,6 +1092,12 @@
                                           <td id="gift_card_payment" class="text-right"></td>
                                         </tr>
                                         @endif
+                                        @if(in_array("load_card",$options))
+                                        <tr>
+                                          <td>{{trans('file.Load Card Payment')}}:</td>
+                                          <td id="load_card_payment" class="text-right"></td>
+                                        </tr>
+                                        @endif
                                         @if(in_array("deposit",$options))
                                         <tr>
                                           <td>{{trans('file.Deposit Payment')}}:</td>
@@ -1151,6 +1170,10 @@
                                         <tr>
                                           <td>{{trans('file.Gift Card Payment')}}:</td>
                                           <td class="gift_card_payment text-right"></td>
+                                        </tr>
+                                        <tr>
+                                          <td>{{trans('file.Load Card Payment')}}:</td>
+                                          <td class="load_card_payment text-right"></td>
                                         </tr>
                                         <tr>
                                           <td>{{trans('file.Deposit Payment')}}:</td>
@@ -1287,7 +1310,9 @@ var unit_operation_value = [];
 var is_imei = [];
 var is_variant = [];
 var gift_card_amount = [];
+var load_card_amount = [];
 var gift_card_expense = [];
+var load_card_expense = [];
 
 // temporary array
 var temp_unit_name = [];
@@ -1539,6 +1564,7 @@ if(keyboard_active==1){
               $('#register-details-modal #credit_card_payment').text(data['credit_card_payment']);
               $('#register-details-modal #cheque_payment').text(data['cheque_payment']);
               $('#register-details-modal #gift_card_payment').text(data['gift_card_payment']);
+              $('#register-details-modal #load_card_payment').text(data['load_card_payment']);
               $('#register-details-modal #deposit_payment').text(data['deposit_payment']);
               $('#register-details-modal #paypal_payment').text(data['paypal_payment']);
               $('#register-details-modal #total_sale_return').text(data['total_sale_return']);
@@ -1562,6 +1588,7 @@ if(keyboard_active==1){
               $('#today-sale-modal .credit_card_payment').text(data['credit_card_payment']);
               $('#today-sale-modal .cheque_payment').text(data['cheque_payment']);
               $('#today-sale-modal .gift_card_payment').text(data['gift_card_payment']);
+              $('#today-sale-modal .load_card_payment').text(data['load_card_payment']);
               $('#today-sale-modal .deposit_payment').text(data['deposit_payment']);
               $('#today-sale-modal .paypal_payment').text(data['paypal_payment']);
               $('#today-sale-modal .total_sale_return').text(data['total_sale_return']);
@@ -2137,6 +2164,13 @@ $("#gift-card-btn").on("click",function() {
     giftCard();
 });
 
+$("#load-card-btn").on("click",function() {
+    $('select[name="paid_by_id_select"]').val(8);
+    $('.selectpicker').selectpicker('refresh');
+    $('div.qc').hide();
+    loadCard();
+});
+
 $("#credit-card-btn").on("click",function() {
     $('select[name="paid_by_id_select"]').val(3);
     $('.selectpicker').selectpicker('refresh');
@@ -2216,6 +2250,14 @@ $('#add-payment select[name="gift_card_id_select"]').on("change", function() {
     $('#add-payment input[name="gift_card_id"]').val($(this).val());
     if($('input[name="paid_amount"]').val() > balance){
         alert('Amount exceeds card balance! Gift Card balance: '+ balance);
+    }
+});
+
+$('#add-payment select[name="load_card_id_select"]').on("change", function() {
+    var balance = load_card_amount[$(this).val()] - load_card_expense[$(this).val()];
+    $('#add-payment input[name="load_card_id"]').val($(this).val());
+    if($('input[name="paid_amount"]').val() > balance){
+        alert('Amount exceeds card balance! Load Card balance: '+ balance);
     }
 });
 
@@ -2764,6 +2806,7 @@ function hide() {
     $(".card-errors").hide();
     $(".cheque").hide();
     $(".gift-card").hide();
+    $(".load-card").hide();
     $('input[name="cheque_no"]').attr('required', false);
 }
 
@@ -2787,6 +2830,31 @@ function giftCard() {
     $(".card-element").hide();
     $(".card-errors").hide();
     $(".cheque").hide();
+    $(".load-card").hide();
+    $('input[name="cheque_no"]').attr('required', false);
+}
+function loadCard() {
+    $(".load-card").show();
+    $.ajax({
+        url: 'sales/get_load_card',
+        type: "GET",
+        dataType: "json",
+        success:function(data) {
+            console.log(data);
+            $('#add-payment select[name="load_card_id_select"]').empty();
+            $.each(data, function(index) {
+                load_card_amount[data[index]['id']] = data[index]['amount'];
+                load_card_expense[data[index]['id']] = data[index]['expense'];
+                $('#add-payment select[name="load_card_id_select"]').append('<option value="'+ data[index]['id'] +'">'+ data[index]['card_no'] +'</option>');
+            });
+            $('.selectpicker').selectpicker('refresh');
+            $('.selectpicker').selectpicker();
+        }
+    });
+    $(".card-element").hide();
+    $(".card-errors").hide();
+    $(".cheque").hide();
+    $(".gift-card").hide();
     $('input[name="cheque_no"]').attr('required', false);
 }
 
@@ -2796,6 +2864,7 @@ function cheque() {
     $(".card-element").hide();
     $(".card-errors").hide();
     $(".gift-card").hide();
+    $(".load-card").hide();
 }
 
 function creditCard() {
@@ -2806,6 +2875,7 @@ function creditCard() {
     @endif
     $(".cheque").hide();
     $(".gift-card").hide();
+    $(".load-card").hide();
     $('input[name="cheque_no"]').attr('required', false);
 }
 

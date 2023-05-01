@@ -5,13 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LoadCardRecharge extends Model
+class PaymentWithLoadCard extends Model
 {
     use HasFactory;
-    protected $table = 'load_card_recharges';
-
+    protected $table = 'payment_with_load_card';
     protected $fillable =[
-
-        "load_card_id", "amount", "user_id"
+        "payment_id", "load_card_id"
     ];
 }
