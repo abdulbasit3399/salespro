@@ -2258,6 +2258,7 @@ $('#add-payment select[name="load_card_id_select"]').on("change", function() {
     $('#add-payment input[name="load_card_id"]').val($(this).val());
     if($('input[name="paid_amount"]').val() > balance){
         alert('Amount exceeds card balance! Load Card balance: '+ balance);
+
     }
 });
 
@@ -2834,18 +2835,21 @@ function giftCard() {
     $('input[name="cheque_no"]').attr('required', false);
 }
 function loadCard() {
+    console.log('sdds');
     $(".load-card").show();
     $.ajax({
         url: 'sales/get_load_card',
         type: "GET",
         dataType: "json",
         success:function(data) {
-            console.log(data);
+
             $('#add-payment select[name="load_card_id_select"]').empty();
             $.each(data, function(index) {
+                let balance = data[index]['amount'] - data[index]['expense'];
+
                 load_card_amount[data[index]['id']] = data[index]['amount'];
                 load_card_expense[data[index]['id']] = data[index]['expense'];
-                $('#add-payment select[name="load_card_id_select"]').append('<option value="'+ data[index]['id'] +'">'+ data[index]['card_no'] +'</option>');
+                $('#add-payment select[name="load_card_id_select"]').append('<option value="'+ data[index]['id'] +'">'+ data[index]['card_no']+' Balance: '+balance +'</option>');
             });
             $('.selectpicker').selectpicker('refresh');
             $('.selectpicker').selectpicker();

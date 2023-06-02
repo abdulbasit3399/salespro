@@ -16,8 +16,8 @@
                         <div class="row">
                             <div class="col-md-4 mt-4">
                                 <div class="form-group">
-                                    <input type="checkbox" name="both" value="1" />&nbsp;
-                                    <label>{{trans('file.Both Customer and Supplier')}}</label>
+                                    <input type="checkbox" name="both" id="both" value="1" />&nbsp;
+                                    <label for="both">{{trans('file.Both Customer and Supplier')}}</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -32,8 +32,26 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>{{trans('file.name')}} *</strong> </label>
+                                    <label>{{trans('file.customer')}} ID* </label>
+                                    <input type="text" id="customer_id" name="customer_id" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>First {{trans('file.name')}} * </label>
                                     <input type="text" id="name" name="customer_name" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Last {{trans('file.name')}} * </label>
+                                    <input type="text" id="last_name" name="last_name" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{trans('file.Load Card')}}</label>
+                                    <input type="text" id="load_card" name="load_card" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -60,8 +78,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>{{trans('file.Phone Number')}} *</label>
-                                    <input type="text" name="phone_number" required class="form-control">
+                                    <label>{{trans('file.Phone Number')}} </label>
+                                    <input type="text" name="phone_number" class="form-control">
                                     @if($errors->has('phone_number'))
                                    <span>
                                        <strong>{{ $errors->first('phone_number') }}</strong>
@@ -77,14 +95,14 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>{{trans('file.Address')}} *</label>
-                                    <input type="text" name="address" required class="form-control">
+                                    <label>{{trans('file.Address')}}</label>
+                                    <input type="text" name="address" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>{{trans('file.City')}} *</label>
-                                    <input type="text" name="city" required class="form-control">
+                                    <label>{{trans('file.City')}}</label>
+                                    <input type="text" name="city" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4">

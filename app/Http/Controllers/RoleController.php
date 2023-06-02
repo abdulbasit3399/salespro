@@ -1109,6 +1109,24 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('gift_card');
 
+        if($request->has('load_card')){
+            $permission = Permission::firstOrCreate(['name' => 'load_card']);
+            if(!$role->hasPermissionTo('load_card')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('load_card');
+
+        if($request->has('fast_recharge')){
+            $permission = Permission::firstOrCreate(['name' => 'fast_recharge']);
+            if(!$role->hasPermissionTo('fast_recharge')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('fast_recharge');
+
         if($request->has('coupon')){
             $permission = Permission::firstOrCreate(['name' => 'coupon']);
             if(!$role->hasPermissionTo('coupon')){

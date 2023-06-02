@@ -13,6 +13,12 @@
 <section>
     <div class="container-fluid">
         <button class="btn btn-info" data-toggle="modal" data-target="#gift_card-modal"><i class="dripicons-plus"></i> {{trans('file.Add Load Card')}}</button>
+        @php
+          $fast_recharge_permission_active = $role_has_permissions_list->where('name', 'fast_recharge')->first();
+          if($fast_recharge_permission_active):
+        @endphp
+          <a href="{{route('sale.fast_recharge_load_card')}}" class="btn btn-primary">Fast Recharge</a>
+        @endif
     </div>
     <div class="table-responsive">
         <table id="gift_card-table" class="table">

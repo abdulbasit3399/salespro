@@ -393,6 +393,7 @@ class SettingController extends Controller
         $pos_setting->paypal_live_api_secret = $data['paypal_signature'];
         $pos_setting->payment_options = $options;
         $pos_setting->invoice_option = $data['invoice_size'];
+        $pos_setting->load_card_negative_balance = $data['load_card_negative_balance'];
         if(!isset($data['keybord_active']))
             $pos_setting->keybord_active = false;
         else

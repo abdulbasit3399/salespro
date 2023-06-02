@@ -25,6 +25,7 @@
                 <tr>
                     <th class="not-exported"></th>
                     <th>{{trans('file.Customer Group')}}</th>
+                    <th>{{trans('file.customer')}} ID</th>
                     <th>{{trans('file.Customer Details')}}</th>
                     <th>{{trans('file.Discount Plan')}}</th>
                     <th>{{trans('file.Reward Points')}}</th>
@@ -56,8 +57,9 @@
                 <tr data-id="{{$customer->id}}">
                     <td>{{$key}}</td>
                     <td>{{$customer->customerGroup->name}}</td>
+                    <td>{{$customer->customer_id}}</td>
                     <td>
-                        {{$customer->name}}
+                        {{$customer->name.' '.$customer->last_name}}
                         @if($customer->company_name)
                         <br>{{$customer->company_name}}
                         @endif

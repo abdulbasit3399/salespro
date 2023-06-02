@@ -25,10 +25,22 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>{{trans('file.customer')}} ID* </label>
+                                    <input type="text" id="customer_id" value="{{$lims_customer_data->customer_id}}" name="customer_id" disabled required class="form-control">
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.name')}} *</strong> </label>
+                                    <label>{{trans('file.name')}} *</label>
                                     <input type="text" name="customer_name" value="{{$lims_customer_data->name}}" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Last {{trans('file.name')}} * </label>
+                                    <input type="text" id="last_name" name="last_name" value="{{$lims_customer_data->last_name}}" required class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -45,8 +57,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.Phone Number')}} *</label>
-                                    <input type="text" name="phone_number" required value="{{$lims_customer_data->phone_number}}" class="form-control">
+                                    <label>{{trans('file.Phone Number')}}</label>
+                                    <input type="text" name="phone_number" value="{{$lims_customer_data->phone_number}}" class="form-control">
                                     @if($errors->has('phone_number'))
                                    <span>
                                        <strong>{{ $errors->first('phone_number') }}</strong>
@@ -62,14 +74,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.Address')}} *</label>
-                                    <input type="text" name="address" required value="{{$lims_customer_data->address}}" class="form-control">
+                                    <label>{{trans('file.Address')}} </label>
+                                    <input type="text" name="address" value="{{$lims_customer_data->address}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{trans('file.City')}} *</label>
-                                    <input type="text" name="city" required value="{{$lims_customer_data->city}}" class="form-control">
+                                    <label>{{trans('file.City')}} </label>
+                                    <input type="text" name="city" value="{{$lims_customer_data->city}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">

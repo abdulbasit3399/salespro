@@ -128,7 +128,7 @@
       <nav class="side-navbar">
         <span class="brand-big">
             @if($general_setting->site_logo)
-            <a href="{{url('/')}}"><img src="{{url('logo', $general_setting->site_logo)}}" width="115"></a>
+            <a href="{{url('/')}}"><img src="{{url('logo', $general_setting->site_logo)}}" width="150"></a>
             @else
             <a href="{{url('/')}}"><h1 class="d-inline">{{$general_setting->site_title}}</h1></a>
             @endif
@@ -235,6 +235,8 @@
 
                 $sale_add_permission_active = $role_has_permissions_list->where('name', 'sales-add')->first();
 
+                $fast_recharge_permission_active = $role_has_permissions_list->where('name', 'fast_recharge')->first();
+
                 $product_qty_alert_active = $role_has_permissions_list->where('name', 'product-qty-alert')->first();
 
                 $general_setting_permission_active = $role_has_permissions_list->where('name', 'general_setting')->first();
@@ -242,7 +244,12 @@
             @if($sale_add_permission_active)
             <li class="nav-item"><a class="btn-pos btn-sm" href="{{route('sale.pos')}}"><i class="dripicons-shopping-bag"></i><span> POS</span></a></li>
             @endif
-            <li class="nav-item"><a id="switch-theme" data-toggle="tooltip" title="{{trans('file.Switch Theme')}}"><i class="dripicons-brightness-max"></i></a></li>
+
+            @if($fast_recharge_permission_active)
+            <li class="nav-item"><a class="btn-pos btn-sm" href="{{route('sale.fast_recharge_load_card')}}"><span> Fast Recharge</span></a></li>
+            @endif
+            
+            {{-- <li class="nav-item"><a id="switch-theme" data-toggle="tooltip" title="{{trans('file.Switch Theme')}}"><i class="dripicons-brightness-max"></i></a></li> --}}
             <li class="nav-item"><a id="btnFullscreen" data-toggle="tooltip" title="{{trans('file.Full Screen')}}"><i class="dripicons-expand"></i></a></li>
             @if(\Auth::user()->role_id <= 2)
                 <li class="nav-item"><a href="{{route('cashRegister.index')}}" data-toggle="tooltip" title="{{trans('file.Cash Register List')}}"><i class="dripicons-archive"></i></a></li>
@@ -289,6 +296,7 @@
                     </ul>
                 </li>
             @endif
+            {{--
             <li class="nav-item">
                     <a rel="nofollow" title="{{trans('file.language')}}" data-toggle="tooltip" class="nav-link dropdown-item"><i class="dripicons-web"></i></a>
                     <ul class="right-sidebar">
@@ -345,6 +353,7 @@
                         </li>
                     </ul>
             </li>
+            --}}
             <li class="nav-item">
                 <a rel="nofollow" data-toggle="tooltip" class="nav-link dropdown-item"><i class="dripicons-user"></i> <span>{{ucfirst(Auth::user()->name)}}</span> <i class="fa fa-angle-down"></i>
                 </a>
@@ -396,7 +405,8 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-12">
-              <p>&copy; {{$general_setting->site_title}} | {{trans('file.Developed')}} {{trans('file.By')}} <span class="external">{{$general_setting->developed_by}}</span> | V 3.8</p>
+            {{-- <p>&copy; {{$general_setting->site_title}} | {{trans('file.Developed')}} {{trans('file.By')}} <span class="external">{{$general_setting->developed_by}}</span> | V 3.8</p> --}}
+            <p>&copy; {{$general_setting->site_title}}</p>
             </div>
           </div>
         </div>

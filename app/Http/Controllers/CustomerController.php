@@ -9,6 +9,7 @@ use App\Deposit;
 use App\User;
 use App\Supplier;
 use App\Sale;
+use App\LoadCard;
 use App\Payment;
 use App\CashRegister;
 use App\Account;
@@ -111,6 +112,16 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        $prev_cust = Customer::where('customer_id',$request->customer_id)->first();
+        if($prev_cust)
+            return redirect()->back()->with('not_permitted', 'Customer ID already exists.');
+        if(isset($request->load_card))
+        {
+            $prev_load = LoadCard::where('card_no',$request->load_card)->first();
+            if($prev_load)
+                return redirect()->back()->with('not_permitted', 'Load Card already exists.');
+        }
+        
         $this->validate($request, [
             'phone_number' => [
                 'max:255',
@@ -185,6 +196,24 @@ class CustomerController extends Controller
             $message .= ' created successfully!';
 
         $lims_customer_data = Customer::create($customer_data);
+        if(isset($request->load_card))
+        {
+            $date = new \DateTime(); // Creates a new DateTime object for the current date/time
+            $date->modify('+1 year'); // Adds 1 year to the date
+            $updatedDate = $date->format('Y-m-d');
+
+            $load_card = new LoadCard;
+            $load_card->card_no = $request->load_card;
+            $load_card->amount = 0;
+            $load_card->expense = 0;
+            $load_card->customer_id = $lims_customer_data->id;
+            $load_card->expired_date = $updatedDate;
+            $load_card->created_by = \Auth::id();
+            $load_card->is_active = 1;
+            $load_card->save();
+
+        }
+
         //inserting data for custom fields
         $custom_field_data = [];
         $custom_fields = CustomField::where('belongs_to', 'customer')->select('name', 'type')->get();
@@ -299,10 +328,12 @@ class CustomerController extends Controller
                     $value=preg_replace('/\D/','',$value);
                 }
                $data= array_combine($escapedHeader, $columns);
+
                $lims_customer_group_data = CustomerGroup::where('name', $data['customergroup'])->first();
-               $customer = Customer::firstOrNew(['name'=>$data['name']]);
+               $customer = Customer::firstOrNew(['name'=>$data['firstname']]);
                $customer->customer_group_id = $lims_customer_group_data->id;
-               $customer->name = $data['name'];
+               $customer->name = $data['firstname'];
+               $customer->last_name = $data['lastname'];
                $customer->company_name = $data['companyname'];
                $customer->email = $data['email'];
                $customer->phone_number = $data['phonenumber'];
@@ -313,6 +344,27 @@ class CustomerController extends Controller
                $customer->country = $data['country'];
                $customer->is_active = true;
                $customer->save();
+
+               if($data['loadcard'])
+               {
+                    if(!LoadCard::where('card_no',$data['loadcard'])->first())
+                    {
+                        $date = new \DateTime(); // Creates a new DateTime object for the current date/time
+                        $date->modify('+1 year'); // Adds 1 year to the date
+                        $updatedDate = $date->format('Y-m-d');
+
+                        $load_card = new LoadCard;
+                        $load_card->card_no = $data['loadcard'];
+                        $load_card->amount = 0;
+                        $load_card->expense = 0;
+                        $load_card->customer_id = $customer->id;
+                        $load_card->expired_date = $updatedDate;
+                        $load_card->created_by = \Auth::id();
+                        $load_card->is_active = 1;
+                        $load_card->save();
+                    }
+               }
+
                $message = 'Customer Imported Successfully';
                if($data['email']){
                     try {
